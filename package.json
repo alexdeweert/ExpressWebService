@@ -1,0 +1,18 @@
+{
+  "name": "webservice",
+  "version": "1.0.0",
+  "description": "An ExpressJS REST Webservice",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/protected-plateau-84705.git"
+  },
+  "author": "Alex Deweert",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
