@@ -7,7 +7,7 @@ const pool = new Pool({
 });
 const app = express()
 
-app.get('/', (req, res) => res.send('Hello World!'))
+app.get('/', (req, res) => res.send('HAHAHAH'))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
 app.get('/db', async (req, res) => {
