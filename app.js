@@ -1,23 +1,33 @@
 const express = require('express')
 const PORT = process.env.PORT || 5000
 const { Pool } = require('pg')
+
+//Use for heroku server testing
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: true
 });
-const app = express()
 
+// //Use for localhost testing
+// const pool = new Pool({
+//   host: 'localhost',
+//   port: '5432',
+//   user: 'postgres',
+//   database: 'postgres',
+//   password: 'postgres',
+//   ssl: false
+// });
+
+const app = express()
 app.get('/', async (req, res) => {
   try {
     const client = await pool.connect()
     const result = await client.query('SELECT * FROM test_table');
-    console.log(result);
-    res.render('/', result);
+    await res.send( result );
     client.release();
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
   }
 })
-.listen(PORT, () => console.log(`Listening on ${ PORT }`));
-//app.get('/', (req, res) => res.send('HAHAHAH'))
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
