@@ -1,5 +1,21 @@
-html
-  head
-    title= title
-  body
-    h1= message
+doctype html
+html(lang='en')
+head
+  title Pug
+body
+  h1 Sample client registration
+
+form(method='POST' action='/auth')
+    div.form-group
+      label(for='name')  Name
+      input.form-control(type='text' id='name' placeholder='name' name='name')
+
+    div.form-group
+      label(for='email')  Email
+      input.form-control(type='text' id='email' placeholder='email' name='email')
+
+    div.form-group
+      label(for='password')  Password
+      input.form-control(type='password' id='password' placeholder='password' name='password')
+
+    button.btn.btn-primary(type='submit') Log in
