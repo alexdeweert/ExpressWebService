@@ -1,3 +1,5 @@
+--!!!! CAUTION do not run this when connected to the production ERGONOMYX DB !!!
+-- \i ./devel/nodejs/webservice/create_schema.sql in PGSQL
 drop table if exists devices;
 drop table if exists followers;
 drop table if exists post;
