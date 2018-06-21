@@ -129,11 +129,11 @@ postrouter.post('/login', async function( req, res ) {
 //encrypts the users password, and sends the user a JSON Web Token
 postrouter.post('/register', CheckDuplicateRegistration, async function( req,res,next ) {
 
-  var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  var hashedPassword = bcrypt.hashSync(req.body.password_hash, 8);
   console.log("A client is attempting to register with: ");
-  console.log("Name: " + req.body.name);
+  console.log("Name: " + req.body.username);
   console.log("Email: " + req.body.email);
-  console.log("Password: " + req.body.password);
+  console.log("Password: " + req.body.password_hash);
   console.log("...hashed the password: " + hashedPassword);
 
   //Create (add) the user
