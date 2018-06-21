@@ -10,7 +10,20 @@ function verifyToken(req, res, next)
   }
 
   jwt.verify(token, config.secret, function(err, decoded) {
-    if( err ) {return res.status(500).send({auth:false, message:'Failed to authenticate token'})};
+    if( err ) {
+      if( err.name == 'TokenExpiredError' ) {
+        console.log("Client attempted to access resources with an EXPIRED TOKEN: " + err);
+        return res.status(401).send({auth:false, message:'Unauthorized token EXPIRED', 'json-web-token-status':'expired'});
+      }
+      else {
+        console.log(err);
+        return res.status(500).send({auth:false, message:'Failed to authenticate token'});
+      }
+    }
+    console.log("The TOKEN sent by the user expires at UNIX time: " + decoded.exp);
+
+    //TODO Check to make sure that the decoded ID actually exists in the Database
+    //if it does not, send an error.
 
     req.userId = decoded.id;
     next();

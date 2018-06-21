@@ -15,7 +15,7 @@ const pool = new Pool({
   ssl: true
   });
 
-//Use for localhost testing
+// //Use for localhost testing
 // const pool = new Pool({
 //   host: 'localhost',
 //   port: '5432',
