@@ -18,7 +18,7 @@ async function checkDuplicateRegistration(req, res, next)
 {
   console.log("Something called checkDuplicateRegistration");
   const client = await pool.connect();
-  const text = 'select * from users where email = $1 limit 1';
+  const text = 'select * from "user" where email = $1 limit 1';
   const values = [req.body.email];
   console.log("checking for duplicate registration. The email to be checked is: " + req.body.email);
   await client.query(text, values, (err, queryResult) => {
