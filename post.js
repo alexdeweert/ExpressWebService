@@ -127,7 +127,7 @@ postrouter.post('/login', async function( req, res ) {
 //TODO make this work with "user" table not users
 //POST: Register a user. Creates a new user entry in the database
 //encrypts the users password, and sends the user a JSON Web Token
-postrouter.post('/register', CheckDuplicateRegistration, async function( req,res,next ) {
+postrouter.post('/register', CheckDuplicateRegistration, async function( req, res, next ) {
 
   var hashedPassword = bcrypt.hashSync(req.body.password_hash, 8);
   console.log("A client is attempting to register with: ");
@@ -144,7 +144,7 @@ postrouter.post('/register', CheckDuplicateRegistration, async function( req,res
     const client = await pool.connect()
     //Insert user into the database (will always insert)
     //TODO Insert if user does not exist and they are REGISTERING //add username, email, password_hash, about_me, last_seen, height, weight, dob, status
-    await client.query('insert into "user" (id, username, email, password_hash, about_me, last_seen, height, weight, dob, status) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',[req.body.id,req.body.username, req.body.email, req.body.password_hash, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
+    await client.query('insert into "user" (username, email, password_hash, about_me, last_seen, height, weight, dob, status) values($1, $2, $3, $4, $5, $6, $7, $8, $9)',[req.body.username, req.body.email, req.body.password_hash, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
     console.log("Inserted a user into the DB...");
 
     //IF we're registering the user we must generate a JSON WEB TOKEN (jwt)
