@@ -90,19 +90,19 @@ postrouter.post('/login', async function( req, res ) {
   try
   {
     console.log("Attempting to select * from users where email = " + req.body.email);
-    console.log("req.body.password: " + req.body.password);
+    console.log("req.body.password: " + req.body.password_hash);
     const client = await pool.connect();
     //var user = await client.query('select * from users where email = $1 limit 1',[req.body.email]);
 
-    const text = 'select * from users where email = $1 limit 1';
+    const text = 'select * from "user" where email = $1 limit 1';
     const values = [req.body.email];
     await client.query(text, values, (err, queryResult) => {
       if (err) {
         console.log(err.stack)
       } else {
         console.log("Client login attempt resulted in a found account with email: " + req.body.email);
-        console.log("Comparing the existing password in DB (which is hashed) with provided password: " + req.body.password);
-        var isPasswordValid = bcrypt.compareSync(req.body.password, queryResult.rows[0].password);
+        console.log("Comparing the existing password in DB (which is hashed) with provided password: " + req.body.password_hash);
+        var isPasswordValid = bcrypt.compareSync(req.body.password_hash, queryResult.rows[0].password_hash);
         if( !isPasswordValid ) {
           console.log("Client provided an INVALID password");
           return res.status(401).send({auth: false, token: null, message: "Invalid password provided"});
@@ -144,7 +144,7 @@ postrouter.post('/register', CheckDuplicateRegistration, async function( req, re
     const client = await pool.connect()
     //Insert user into the database (will always insert)
     //TODO Insert if user does not exist and they are REGISTERING //add username, email, password_hash, about_me, last_seen, height, weight, dob, status
-    await client.query('insert into "user" (username, email, password_hash, about_me, last_seen, height, weight, dob, status) values($1, $2, $3, $4, $5, $6, $7, $8, $9)',[req.body.username, req.body.email, req.body.password_hash, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
+    await client.query('insert into "user" (username, email, password_hash, about_me, last_seen, height, weight, dob, status) values($1, $2, $3, $4, $5, $6, $7, $8, $9)',[req.body.username, req.body.email, hashedPassword, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
     console.log("Inserted a user into the DB...");
 
     //IF we're registering the user we must generate a JSON WEB TOKEN (jwt)
