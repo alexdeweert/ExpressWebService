@@ -144,7 +144,7 @@ postrouter.post('/register', CheckDuplicateRegistration, async function( req,res
     const client = await pool.connect()
     //Insert user into the database (will always insert)
     //TODO Insert if user does not exist and they are REGISTERING //add username, email, password_hash, about_me, last_seen, height, weight, dob, status
-    await client.query('insert into "user" (id, username, email, password_hash, about_me, last_seen, height, weight, dob, status) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',['nextval(\'user_id_seq\')',req.body.username, req.body.email, req.body.password_hash, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
+    await client.query('insert into "user" (id, username, email, password_hash, about_me, last_seen, height, weight, dob, status) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',["nextval(\'user_id_seq\')",req.body.username, req.body.email, req.body.password_hash, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
     console.log("Inserted a user into the DB...");
 
     //IF we're registering the user we must generate a JSON WEB TOKEN (jwt)
