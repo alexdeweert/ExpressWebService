@@ -15,15 +15,15 @@ const pool = new Pool({
   ssl: true
   });
 
-//Use for localhost testing
-const pool = new Pool({
-  host: 'localhost',
-  port: '5432',
-  user: 'postgres',
-  database: 'postgres',
-  password: 'postgres',
-  ssl: false
-});
+// //Use for localhost testing
+// const pool = new Pool({
+//   host: 'localhost',
+//   port: '5432',
+//   user: 'postgres',
+//   database: 'postgres',
+//   password: 'postgres',
+//   ssl: false
+// });
 
 //GET
 getrouter.get('/', function(req,res) {
