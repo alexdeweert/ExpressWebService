@@ -84,6 +84,7 @@ postrouter.post('/add_device', VerifyToken, async function( req,res,next ) {
   }
 });
 
+//TODO make this work with "user" table not users
 //POST Login
 postrouter.post('/login', async function( req, res ) {
   try
@@ -123,6 +124,7 @@ postrouter.post('/login', async function( req, res ) {
   }
 });
 
+//TODO make this work with "user" table not users
 //POST: Register a user. Creates a new user entry in the database
 //encrypts the users password, and sends the user a JSON Web Token
 postrouter.post('/register', CheckDuplicateRegistration, async function( req,res,next ) {
@@ -141,14 +143,14 @@ postrouter.post('/register', CheckDuplicateRegistration, async function( req,res
     var userid = null;
     const client = await pool.connect()
     //Insert user into the database (will always insert)
-    //TODO Insert if user does not exist and they are REGISTERING
-    await client.query('insert into users values(99, $1, $2, 1, 1, \'1983-01-01\',$3, $3, 1200, 1200, \'2016-01-01\', 99, 99)',[req.body.email,hashedPassword,req.body.name]);
+    //TODO Insert if user does not exist and they are REGISTERING //add username, email, password_hash, about_me, last_seen, height, weight, dob, status
+    await client.query('insert into user values($1, $2, $3, $4, $5, $6, $7, $8, $9)',[req.body.username, req.body.email, req.body.password_hash, req.body.about_me, req.body.last_seen, req.body.height, req.body.weight, req.body.dob, req.body.status]);
     console.log("Inserted a user into the DB...");
 
     //IF we're registering the user we must generate a JSON WEB TOKEN (jwt)
     //so we get the users auto gen'd ID from the database, and use it to seed
     //the jwt.sign method
-    var uid = await client.query('select id from users where username = $2 and email = $1',[req.body.email,req.body.name]);
+    var uid = await client.query('select id from users where email = $1',[req.body.email]);
 
     console.log("Got auto-generated user ID from the database to use at JWT payload (for encryption): " + uid.rows[0].id);
     jwtoken = jwt.sign( {id: uid.rows[0].id}, config.secret, {
