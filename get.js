@@ -12,7 +12,8 @@ getrouter.use(bodyParser.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.REQUIRE_SSL
+  //ssl: false
+  //ssl: process.env.REQUIRE_SSL
   });
 
 // //Use for localhost testing

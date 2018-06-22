@@ -15,7 +15,8 @@ const tokenExpirySeconds = 7776000;//90 days
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.REQUIRE_SSL
+  //ssl: process.env.REQUIRE_SSL
+  //ssl: false
   });
 
 // //Use for localhost testing
@@ -59,7 +60,7 @@ postrouter.post('/add_scheduler', VerifyToken, async function( req,res,next ) {
 });
 
 //AddDevice "Connect.xaml.cs"
-postrouter.post('/add_device', VerifyToken, async function( req,res,next ) {
+postrouter.post('/add_device.json', VerifyToken, async function( req,res,next ) {
   try {
     const client = await pool.connect();
     const text = 'insert into devices values($1, $2, $3, $4)';
@@ -74,7 +75,6 @@ postrouter.post('/add_device', VerifyToken, async function( req,res,next ) {
         console.log("Client successfully inserted a device into the database");
         res.sendStatus(201);
       }
-      //next();
     });
     await client.release();
   }
@@ -84,7 +84,6 @@ postrouter.post('/add_device', VerifyToken, async function( req,res,next ) {
   }
 });
 
-//TODO make this work with "user" table not users
 //POST Login
 postrouter.post('/login', async function( req, res ) {
   try
