@@ -4,7 +4,7 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   //ssl: true
   //ssl: process.env.REQUIRE_SSL
-  //ssl: false
+  ssl: false
   });
 
 // //Use for localhost testing

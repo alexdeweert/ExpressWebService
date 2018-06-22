@@ -16,7 +16,7 @@ const tokenExpirySeconds = 7776000;//90 days
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   //ssl: process.env.REQUIRE_SSL
-  //ssl: false
+  ssl: false
   });
 
 // //Use for localhost testing

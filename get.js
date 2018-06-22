@@ -12,8 +12,7 @@ getrouter.use(bodyParser.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  //ssl: false
-  //ssl: process.env.REQUIRE_SSL
+  ssl: false
   });
 
 // //Use for localhost testing
@@ -29,44 +28,6 @@ const pool = new Pool({
 //GET
 getrouter.get('/', function(req,res) {
   res.send('GET Handler for get.js: does nothing for now (will eventually return data if the JSON Web Token is valid)');
-});
-
-//GET's the user ID associated with a user token
-/*TODO THIS IS A TEST ONLY it should not be present in the final code!!!
-Because this returns ALL user information which of course is dangerous*/
-getrouter.get('/me', VerifyToken, async function(req, res, next) {
-
-  try {
-    const client = await pool.connect()
-    await client.query('select * from "user" where id = $1',[req.userId], (err,user) => {
-        console.log("Attempting to select * from \"user\" where id = something");
-        console.log("req.userId: " + req.userId);
-        //There was some internal server error (ie a database error)
-        if(err) {
-          console.log("Sending 500 error: problem finding the user");
-          console.error(err);
-          return res.status(500).send("There was a problem finding the user");
-        }
-        //There was no user found with that id
-        if( !user )
-        {
-          console.log("Sending 404 error: No user found");
-          return res.status(404).send("No user found");
-        }
-        //User was found
-        else {
-          console.log("Seding 200 User was found with uid: " + req.userId);
-          res.status(200).send(user);
-        }
-    });
-    //Finished with the query so release the client
-    await client.release();
-  }
-  catch (err) {
-    //There was some internal server error (ie a database error)
-    console.error(err);
-    res.sendStatus(500);
-  }
 });
 
 //GET scheduler table
@@ -145,3 +106,42 @@ getrouter.get('/get_devices_table', VerifyToken, async function(req, res, next) 
 });
 
 module.exports = getrouter;
+
+
+// //GET's the user ID associated with a user token
+// /*TODO THIS IS A TEST ONLY it should not be present in the final code!!!
+// Because this returns ALL user information which of course is dangerous*/
+// getrouter.get('/me', VerifyToken, async function(req, res, next) {
+//
+//   try {
+//     const client = await pool.connect()
+//     await client.query('select * from "user" where id = $1',[req.userId], (err,user) => {
+//         console.log("Attempting to select * from \"user\" where id = something");
+//         console.log("req.userId: " + req.userId);
+//         //There was some internal server error (ie a database error)
+//         if(err) {
+//           console.log("Sending 500 error: problem finding the user");
+//           console.error(err);
+//           return res.status(500).send("There was a problem finding the user");
+//         }
+//         //There was no user found with that id
+//         if( !user )
+//         {
+//           console.log("Sending 404 error: No user found");
+//           return res.status(404).send("No user found");
+//         }
+//         //User was found
+//         else {
+//           console.log("Seding 200 User was found with uid: " + req.userId);
+//           res.status(200).send(user);
+//         }
+//     });
+//     //Finished with the query so release the client
+//     await client.release();
+//   }
+//   catch (err) {
+//     //There was some internal server error (ie a database error)
+//     console.error(err);
+//     res.sendStatus(500);
+//   }
+// });

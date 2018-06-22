@@ -1,5 +1,11 @@
 var jwt = require('jsonwebtoken');
 var config = require('./config');
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  //ssl: process.env.REQUIRE_SSL
+  ssl: false
+  });
 
 function verifyToken(req, res, next)
 {
@@ -22,9 +28,13 @@ function verifyToken(req, res, next)
     }
     console.log("The TOKEN sent by the user expires at UNIX time: " + decoded.exp);
 
-    //TODO Check to make sure that the decoded ID actually exists in the Database
-    //if it does not, send an error.
+    //TODO This is more of a note: Any function that calls this (this as in, VerifyToken)
+    //in its chain of execution, ie "postrouter.post('/add_scheduler', VerifyToken, async function( req,res,next ) {..."
+    //can then refer to the variable req.userId... which is the decoded userId provided by the client during any call
+    //to a get or post request...
 
+    //It might be helpful at some point to use that decoded TOKEN (which contains the user id) to see if that user
+    //actually exists in the database, or to retrieve more information about the current user.
     req.userId = decoded.id;
     next();
   })
