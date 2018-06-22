@@ -12,7 +12,7 @@ getrouter.use(bodyParser.json());
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: true
+  ssl: process.env.REQUIRE_SSL
   });
 
 // //Use for localhost testing
@@ -37,8 +37,8 @@ getrouter.get('/me', VerifyToken, async function(req, res, next) {
 
   try {
     const client = await pool.connect()
-    await client.query('select * from users where id = $1',[req.userId], (err,user) => {
-        console.log("Attempting to select * from users where id = something");
+    await client.query('select * from "user" where id = $1',[req.userId], (err,user) => {
+        console.log("Attempting to select * from \"user\" where id = something");
         console.log("req.userId: " + req.userId);
         //There was some internal server error (ie a database error)
         if(err) {
@@ -97,7 +97,7 @@ getrouter.get('/get_scheduler_table', VerifyToken, async function(req, res, next
 getrouter.get('/get_users_table', VerifyToken, async function(req, res, next) {
   try {
     const client = await pool.connect()
-    await client.query('select * from users', (err, result) => {
+    await client.query('select * from "user"', (err, result) => {
       if(err) {
         console.log("500 Error; Database error");
         return res.status(500).send("500 Error; Database error");

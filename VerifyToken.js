@@ -9,7 +9,7 @@ function verifyToken(req, res, next)
     return res.status(403).send({auth:false, message:'No token provided.'});
   }
 
-  jwt.verify(token, config.secret, function(err, decoded) {
+  jwt.verify(token, process.env.JSON_WEB_TOKEN, function(err, decoded) {
     if( err ) {
       if( err.name == 'TokenExpiredError' ) {
         console.log("Client attempted to access resources with an EXPIRED TOKEN: " + err);

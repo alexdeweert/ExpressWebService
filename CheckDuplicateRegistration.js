@@ -1,10 +1,12 @@
 const { Pool } = require('pg');
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: true
+  //ssl: true
+  ssl: process.env.REQUIRE_SSL
   });
 
-//Use for localhost testing
+// //Use for localhost testing
 // const pool = new Pool({
 //   host: 'localhost',
 //   port: '5432',

@@ -15,7 +15,7 @@ const tokenExpirySeconds = 7776000;//90 days
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: true
+  ssl: process.env.REQUIRE_SSL
   });
 
 // //Use for localhost testing
@@ -89,7 +89,7 @@ postrouter.post('/add_device', VerifyToken, async function( req,res,next ) {
 postrouter.post('/login', async function( req, res ) {
   try
   {
-    console.log("Attempting to select * from users where email = " + req.body.email);
+    console.log("Attempting to select * from \"user\" where email = " + req.body.email);
     console.log("req.body.password: " + req.body.password_hash);
     const client = await pool.connect();
     //var user = await client.query('select * from users where email = $1 limit 1',[req.body.email]);
@@ -107,9 +107,9 @@ postrouter.post('/login', async function( req, res ) {
           console.log("Client provided an INVALID password");
           return res.status(401).send({auth: false, token: null, message: "Invalid password provided"});
         }
-        else {
+        else { //config.secret
           console.log("Client provided a valid password");
-          var jwtoken = jwt.sign({id:queryResult.rows[0].id}, config.secret, {expiresIn:tokenExpirySeconds});
+          var jwtoken = jwt.sign({id:queryResult.rows[0].id}, process.env.JSON_WEB_TOKEN, {expiresIn:tokenExpirySeconds});
           console.log("Sending 200 User was found with email: " + req.body.email + " during client LOGIN ATTEMPT");
           res.status(200).send({auth: true, token: jwtoken});
         }
@@ -153,7 +153,8 @@ postrouter.post('/register', CheckDuplicateRegistration, async function( req, re
     var uid = await client.query('select id from "user" where email = $1',[req.body.email]);
 
     console.log("Got auto-generated user ID from the database to use at JWT payload (for encryption): " + uid.rows[0].id);
-    jwtoken = jwt.sign( {id: uid.rows[0].id}, config.secret, {
+    //config.secret
+    jwtoken = jwt.sign( {id: uid.rows[0].id}, process.env.JSON_WEB_TOKEN, {
       expiresIn: tokenExpirySeconds // expires in 90 days
     });
     console.log("Generated a JSON Web Token based on the users ID and a SECRET key: " + jwtoken);
