@@ -1,18 +1,21 @@
 var jwt = require('jsonwebtoken');
 var config = require('./config');
 const { Pool } = require('pg');
+
+//Uncomment "ssl:false" for live testing
+//For local testing use "heroku local -e .env.test"
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  //ssl: process.env.REQUIRE_SSL
   ssl: false
   });
 
 function verifyToken(req, res, next)
 {
-  console.log("Something called VerifyToken");
+  console.log("Something called VerifyToken...");
   var token = req.headers['x-access-token'];
   if(!token) {
-    return res.status(403).send({auth:false, message:'No token provided.'});
+    console.log("...However, the client did not provide a token - this is likely the result of trying to log in with an invalid password!!");
+    return res.status(403).send({auth:false, message:'No token provided. Try logging in with the correct password.'});
   }
 
   jwt.verify(token, process.env.JSON_WEB_TOKEN, function(err, decoded) {
@@ -22,6 +25,7 @@ function verifyToken(req, res, next)
         return res.status(401).send({auth:false, message:'Unauthorized token EXPIRED', 'json-web-token-status':'expired'});
       }
       else {
+        console.log("Error within verifyToken...")
         console.log(err);
         return res.status(500).send({auth:false, message:'Failed to authenticate token'});
       }

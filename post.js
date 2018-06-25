@@ -13,21 +13,12 @@ postrouter.use(bodyParser.urlencoded({ extended: false }));
 postrouter.use(bodyParser.json());
 const tokenExpirySeconds = 7776000;//90 days
 
+//Uncomment "ssl:false" for live testing
+//For local testing use "heroku local -e .env.test"
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  //ssl: process.env.REQUIRE_SSL
   ssl: false
   });
-
-// //Use for localhost testing
-// const pool = new Pool({
-//   host: 'localhost',
-//   port: '5432',
-//   user: 'postgres',
-//   database: 'postgres',
-//   password: 'postgres',
-//   ssl: false
-// });
 
 //AddScheduler "Schedule.xaml.cs"
 postrouter.post('/add_scheduler', VerifyToken, async function( req,res,next ) {

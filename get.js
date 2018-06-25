@@ -1,4 +1,7 @@
-// get.js
+/*get.js
+* Here we accept select statements from the client
+*/
+
 var express = require('express');
 var getrouter = express.Router();
 var bodyParser = require('body-parser');
@@ -10,20 +13,12 @@ var VerifyToken = require('./VerifyToken');
 getrouter.use(bodyParser.urlencoded({ extended: false }));
 getrouter.use(bodyParser.json());
 
+//Uncomment "ssl:false" for live testing
+//For local testing use "heroku local -e .env.test"
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: false
   });
-
-// //Use for localhost testing
-// const pool = new Pool({
-//   host: 'localhost',
-//   port: '5432',
-//   user: 'postgres',
-//   database: 'postgres',
-//   password: 'postgres',
-//   ssl: false
-// });
 
 //GET
 getrouter.get('/', function(req,res) {
